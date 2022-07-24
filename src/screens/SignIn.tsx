@@ -1,19 +1,27 @@
+import { useState } from 'react';
+import { Alert} from 'react-native'
+import auth from '@react-native-firebase/auth'
 import { VStack, Heading, Icon, useTheme } from 'native-base';
 import { Envelope, Key } from 'phosphor-react-native'
-import { useState } from 'react';
 
 import Logo from '../assets/logo_primary.svg';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 
 export default function SingIn() {
-    const [ name, setName] = useState('')
+    const [ isLoading, setIsLoading] = useState(false)
+    const [ email, setEmail] = useState('')
     const [ password, setPassword] = useState('')
 
     const { colors } = useTheme()
 
     function handleSignIn() {
-        console.log(name, password)
+       if(!email || !password){
+        return Alert.alert('Entrar', 'Informe email e senha')
+       }
+
+       setIsLoading(true)
+
     }
     
     return (
@@ -27,7 +35,7 @@ export default function SingIn() {
                 placeholder='Email'
                 mb={4}
                 InputLeftElement={<Icon ml={4} as={<Envelope color={colors.gray[300]} />} />}
-                onChangeText={setName}
+                onChangeText={setEmail}
             />
             <Input
                 placeholder='Senha'
@@ -37,7 +45,12 @@ export default function SingIn() {
                 onChangeText={setPassword}
             />
 
-            <Button title='Entrar' w='full' color='white' onPress={handleSignIn}/>
+            <Button 
+            title='Entrar'
+             w='full' 
+             color='white'
+             isLoading={isLoading}
+             onPress={handleSignIn}/>
         </VStack>
     )
 }
